@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovelNest • Free Timeless Reads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+    
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="w-72 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+            <div class="p-6 border-b border-zinc-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-rose-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold heading-font">N</div>
+                    <div>
+                        <h1 class="text-3xl font-bold heading-font tracking-tight">NovelNest</h1>
+                        <p class="text-xs text-zinc-500 -mt-1">free forever</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-6">
+                <div class="px-6 mb-8">
+                    <div onclick="navigateTo('home')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-zinc-800 cursor-pointer active">
+                        <i class="fa-solid fa-house w-5"></i>
+                        <span class="font-medium">Discover</span>
+                    </div>
+                    <div onclick="navigateTo('trending')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-zinc-800 cursor-pointer">
+                        <i class="fa-solid fa-fire w-5"></i>
+                        <span class="font-medium">Trending</span>
+                    </div>
+                    <div onclick="navigateTo('library')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-zinc-800 cursor-pointer">
+                        <i class="fa-solid fa-heart w-5"></i>
+                        <span class="font-medium">My Library</span>
+                    </div>
+                </div>
+
+                <div class="px-6">
+                    <div class="text-xs uppercase tracking-widest text-zinc-500 mb-4 px-4">Browse by Mood</div>
+                    <div class="grid grid-cols-2 gap-3 px-4" id="mood-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-zinc-800 text-xs text-zinc-500">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Powered by Project Gutenberg</span>
+                </div>
+                <div class="mt-4 text-[10px]">All books are public domain and completely free.</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Nav -->
+            <nav class="bg-zinc-900 border-b border-zinc-800 px-8 py-5 flex items-center justify-between sticky top-0 z-50">
+                <div class="flex items-center gap-8">
+                    <div id="view-title" class="text-2xl font-semibold heading-font">Discover</div>
+                </div>
+                
+                <div class="flex-1 max-w-xl mx-12">
+                    <div class="relative">
+                        <input 
+                            id="search-input"
+                            type="text" 
+                            placeholder="Search titles, authors, or topics..." 
+                            onkeyup="handleSearch(event)"
+                            class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl py-3 px-6 pl-12 text-sm focus:outline-none focus:border-rose-500 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500"></i>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <button onclick="toggleLibrary()" 
+                            class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-2.5 rounded-3xl text-sm font-medium transition-colors">
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span id="fav-count">0</span>
+                    </button>
+                    
+                    <div class="w-9 h-9 bg-zinc-700 rounded-2xl flex items-center justify-center text-xl cursor-pointer hover:bg-rose-500 hover:text-white transition-all" onclick="showRandomBook()">
+                        🎲
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto p-8" id="content-area">
+                <!-- Home View -->
+                <div id="home-view">
+                    <!-- Hero -->
+                    <div class="relative h-96 rounded-3xl overflow-hidden mb-12" id="hero">
+                        <div class="absolute inset-0 bg-gradient-to-r from-zinc-900/80 via-zinc-900/60 to-transparent z-10"></div>
+                        <img id="hero-image" src="https://picsum.photos/id/1015/1200/600" class="w-full h-full object-cover" alt="">
+                        <div class="absolute bottom-10 left-10 z-20 max-w-md">
+                            <div class="uppercase text-rose-400 text-xs tracking-widest mb-2">Staff Pick</div>
+                            <h2 id="hero-title" class="text-5xl heading-font leading-none mb-3">Pride and Prejudice</h2>
+                            <p id="hero-author" class="text-zinc-400 mb-6">Jane Austen</p>
+                            <button onclick="readBookFromHero()" 
+                                    class="bg-white text-zinc-900 px-8 py-3 rounded-2xl font-semibold flex items-center gap-3 hover:bg-rose-500 hover:text-white transition-all">
+                                <i class="fa-solid fa-book-open"></i>
+                                Start Reading
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trending Now -->
+                    <div class="mb-16">
+                        <div class="flex items-end justify-between mb-6">
+                            <div>
+                                <div class="text-3xl heading-font">Trending Now</div>
+                                <div class="text-zinc-500">Most downloaded this week</div>
+                            </div>
+                            <button onclick="navigateTo('trending')" 
+                                    class="text-rose-400 hover:text-rose-500 flex items-center gap-2 text-sm font-medium">
+                                View all <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div id="trending-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Popular Topics -->
+                    <div>
+                        <div class="text-3xl heading-font mb-6">Explore Topics</div>
+                        <div id="topics-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending View -->
+                <div id="trending-view" class="hidden">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="text-4xl heading-font">Trending This Week</div>
+                        <div class="text-zinc-400 text-sm">Sorted by downloads • Updated hourly</div>
+                    </div>
+                    <div id="trending-full-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Search Results View -->
+                <div id="search-view" class="hidden">
+                    <div id="search-header" class="mb-8 flex items-center justify-between">
+                        <div class="text-3xl heading-font">Search Results</div>
+                        <div id="result-count" class="text-zinc-400"></div>
+                    </div>
+                    <div id="search-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Library View -->
+                <div id="library-view" class="hidden">
+                    <div class="flex items-center gap-8 border-b border-zinc-800 pb-8 mb-8">
+                        <button onclick="switchLibraryTab(0)" id="lib-tab-0"
+                                class="library-tab px-8 py-4 font-medium border-b-2 border-transparent hover:text-white active">Favorites</button>
+                        <button onclick="switchLibraryTab(1)" id="lib-tab-1"
+                                class="library-tab px-8 py-4 font-medium border-b-2 border-transparent hover:text-white">Pinned Reads</button>
+                    </div>
+                    
+                    <div id="favorites-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <div id="pinned-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 hidden">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Detail Modal -->
+    <div id="detail-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[100]">
+        <div class="bg-zinc-900 rounded-3xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex p-6 border-b border-zinc-800">
+                <button onclick="closeModal()" class="text-3xl text-zinc-400 hover:text-white">×</button>
+            </div>
+            
+            <div class="flex-1 overflow-auto p-8" id="modal-content">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Reader Modal -->
+    <div id="reader-modal" class="hidden fixed inset-0 bg-zinc-950 flex flex-col z-[110]">
+        <div class="border-b border-zinc-800 bg-zinc-900 px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="closeReader()" class="text-2xl">←</button>
+                <div>
+                    <div id="reader-title" class="font-semibold"></div>
+                    <div id="reader-author" class="text-xs text-zinc-500"></div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <button onclick="downloadCurrentBook()" 
+                        class="flex items-center gap-2 text-sm hover:text-rose-400">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Download</span>
+                </button>
+                <button onclick="closeReader()" class="w-10 h-10 flex items-center justify-center text-2xl hover:bg-zinc-800 rounded-xl">✕</button>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-auto p-12 bg-zinc-950" id="reader-container">
+            <div id="reader-text" class="reader-content max-w-3xl mx-auto prose prose-invert"></div>
+        </div>
+    </div>
+
+    <script src="main.js">
+    </script>
+</body>
+</html>

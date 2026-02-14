@@ -1,0 +1,34 @@
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap');
+        
+        :root {
+            --primary: 185 75 105;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .book-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+        }
+        
+        .reader-content {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .tail-container {
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
